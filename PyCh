@@ -1,0 +1,150 @@
+#!/bin/python3
+
+import os
+import sys
+from pathlib import Path
+
+置换字典 = {
+    # 基本关键字替换
+    '输出'  : 'print',
+    '请输入'  : 'input',
+    '从'    : 'from',
+    '包含'  : 'import',
+    '当'    : 'while',
+    '所有'  : 'for',
+    '属于'  : 'in',
+    '如果'  : 'if',
+    '又如果': 'elif',
+    '否则'  : 'else',
+    '别名'  : 'as',
+    '函数'  : 'def',
+
+    # 中文标点符号替换, 防止频繁切换输入法
+    '（'    : '(',
+    '）'    : ')',
+    '【'    : '[',
+    '】'    : ']',
+    '’'     : "'",
+    '‘'     : "'",
+    '“'     : r'\"',    # 为"添加转义符
+    '”'     : r'\"',    # 防止 echo 报错
+    '。'    : '.',
+    '，'    : ',',
+    '：'    : ':',
+
+}
+
+def 处理(line: str, 置换字典: dir) -> str:
+    '''根据字典置换一段字符串中特定字符'''
+    for k, v in 置换字典.items():
+        if k in line:
+            line = line.replace(k, v)    # str.replace()替换字符串的字符
+    return line
+
+# print(f'参数列表：{sys.argv}\n')    # 调试时使用
+
+def 部分参数处理() -> str:
+    '''处理部分参数, 并返回一个字符串, 决定程序是否继续执行'''
+    if len(sys.argv) == 1:  # 没有传入参数
+        print('\033[31m !!!NO argv!!! \033[0m')
+        print('Please run the command [PyCh --help]')
+        return 'exit'
+
+    if sys.argv[1] == '--help':    # 传入--help参数
+        # 输出帮助信息并终止程序
+        print('PyCh [option] [file]')
+        print('     [file] \n\t\thandle the file of ChinesePy to Python and run it  处理Pych文件成Python脚本并运行它')
+        print('     --man \n\t\toutput the Chinese document of PyCh  输出PyCh中文文档')
+        print('     --key \n\toutput the replace dir输出替换字典')
+        print('     --help \n\t\toutput the help messge and exit  输出帮助信息并结束程序')
+        print('     --output [output file name] [file] \n\t\tcreative a file and output the Python script init  创建一个新文件并输入翻译后的Python代码')
+        return 'exit'
+
+    if sys.argv[1] == '--key':
+        for k, v in 替换字典.items():
+            print(f'{k} : {v}')
+        return 'exit'
+
+    if sys.argv[1] == '--man':
+        # 输出文档信息
+        print('PyCh \n')
+        print('出于一个突发的有趣的想法而编写的小程序，使用Python3和Bash命令实现基本功能，请确保您在对应环境运行\n')
+        print('PyCh使用Python逐行读取你提供的文件内容，并将翻译后的信息逐行输出到当前目录的.pych文件里（如果你未'+
+              '使用--output参数指定输出文件的话），然后调用Bash[python .pych]命令运行翻译后脚本，并在成功运行后删除'+
+              '.pych文件。它实质只是替换了一些文本，你可以在源码的最上方查看并修改替换字典。\n\n')
+
+        print('使用及参数\n')
+        print('\tPyCh [file]    逐行替换文件内pych文本为Python代码，并运行它')
+        print('\tPyCh --man     输出PyCh中文文档')
+        print('\tPyCh --key     输出PyCh替换字典')
+        print('\tPyCh --help    输出PyCh帮助信息')
+        print('\tPyCh --output [output file] [file]    翻译[file]文件信息并输出到[output file]文件内，并运行'+
+              '[output file]文件。请注意，PyCh不会清空已有的[output file]文件内的信息，而只会在文件末尾追加'+
+              '代码。这个特性有时会有用，但如果[output file]文件内存在错误代码，你可能要在运行PyCh前手动删除'+
+              '已有的[output file]文件名的文件\n\n')
+
+        print('默认教程\n')
+        print('PyCh实际上只是一个文本替换程序，将一些中文字符替换成Python关键字、函数、和英文字符，所以PyCh语'+
+              '法完全遵循Python语法，并可插入Python代码。因为我一些不懂Python的朋友可能需要，下面将列出默认情'+
+              '下PyCh的简单语法。PyCh也对一些中文标点做了替换，以防止频繁切换输入法。')
+        print('\t输出()    [替换print]输出字符串或变量')
+        print('\t\t例：输出("hello")  # 输出hello')
+        print('\t\t    输出(sign)     # 输出变量sign的内容')
+        print('\t请输入()    [替换input]输出括号中的变量或字符，等待用户输入并将输入以字符串形式返回')
+        print('\t\t例：i = 请输入("你的名字：")    # 输出"你的名字"并将用户输入赋值给变量i')
+        print('\t从 [Python库] 包含 [函数名] 别名 [函数别名]     [from import as]从一个Python库包含一个函数并取别名')
+        print('\t\t例：包含 pygame    # 导入pygame库')
+        print('\t\t    从 os 包含 system    # 导入os模块的system()函数')
+        print('\t\t    从 os 包含 system 别名 系统命令    #导入os模块的system()函数并为其取别名为 系统命令')
+        print('\t当 [条件]:    [替换while]当型循环语句，条件为True(真)时循环执行缩进行内的语句')
+        print('其他信息暂无\n\n')
+
+        print('自定义与错误处理\n')
+        print('PyCh实现了读取文件和逐行置换输出功能，你可以通过更改置换字典来借用PyCh的替换功能')
+        print('PyCh使用Bash[python3]来调用默认Python3运行代码，只允许您在拥有python3的Bash或类似环境下运行')
+        print('因为使用了Bash[echo "{line}" >> {output}]来向文件写入信息，代码中存在"$"可能会导致Bash出错')
+        print('不知道还要讲些什么了，就先到这里吧(我为什么会给怎么简单的Python程序写怎么长的文档)\n')
+
+        print('https://github.com/yunjiao20/PyCh    Yunjiao wrint in 2025/5/10')
+        print('如文档过长，请运行     PyCh --man | more')
+
+        return 'exit'
+
+    if sys.argv[1] == '--output':
+        return 'output'
+
+    return 'run'
+
+def main(sign: str):
+    '''实现主要功能, 接受一个从函数 部分参数处理() 返回的字符串, 实现参数功能'''
+
+    if sign == 'exit':    # 部分参数处理() 返回'exit', 结束程序
+        exit()
+
+    # 读取文件信息
+    program_path = sys.argv[len(sys.argv) - 1]    # 获取sys.argv的最后一位参数作为待处理文件地址
+    path = Path(program_path)
+    contents = path.read_text()
+
+    lines = contents.splitlines()    # 处理文件内容分行
+
+    # 确定返回文件名称, 如无 --output 参数则默认为 .pych, 且将在运行后删除
+    if sign == 'output':
+        output_file = sys.argv[2]
+    else:
+        output_file = '.pych'
+
+    # 调用 处理() 逐行替换, 并逐行写入文件
+    for line in lines:
+        line = 处理(line, 置换字典)
+        os.system(f'echo "{line}" >> {output_file}')    # 请注意，这里使用了双引号，输入$可能导致出错
+    os.system(f'python3 {output_file}')    # 运行翻译文件
+
+    if output_file == '.pych':
+        # 删除默认保存文件 .pych 并终止程序
+        os.system('rm .pych')
+        exit()
+    print(f'\nthe output file is {output_file}')
+
+if __name__ == '__main__':
+    main(部分参数处理())
