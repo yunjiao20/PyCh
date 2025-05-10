@@ -55,13 +55,13 @@ def 部分参数处理() -> str:
         print('PyCh [option] [file]')
         print('     [file] \n\t\thandle the file of ChinesePy to Python and run it  处理Pych文件成Python脚本并运行它')
         print('     --man \n\t\toutput the Chinese document of PyCh  输出PyCh中文文档')
-        print('     --key \n\toutput the replace dir输出替换字典')
+        print('     --key \n\t\toutput the replace dir输出替换字典')
         print('     --help \n\t\toutput the help messge and exit  输出帮助信息并结束程序')
         print('     --output [output file name] [file] \n\t\tcreative a file and output the Python script init  创建一个新文件并输入翻译后的Python代码')
         return 'exit'
 
     if sys.argv[1] == '--key':
-        for k, v in 替换字典.items():
+        for k, v in 置换字典.items():
             print(f'{k} : {v}')
         return 'exit'
 
