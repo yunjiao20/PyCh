@@ -21,6 +21,16 @@ PyCh使用Python3和Bash命令实现基本功能，请确保您在对应环境�
 PyCh使用Python逐行读取你提供的文件内容，并将翻译后的信息逐行输出到当前目录的.pych文件里（如果你未使用--output参数指定输出文件的话），然后调用Bash[python .pych]命令运行翻译后脚本，并在成功运行后删除.pych文件。它实质只是替换了一些文本，你可以在源码的最上方查看并修改替换字典。
 
 
+## 快速更新
+
+如果您希望快速的将PyCh更新成新一版（或自定义版本），并放入 /bin 目录作为默认命令的话，可以使用 install.sh
+
+    git clone https://github.com/yunjiao20/PyCh
+    bash install.sh    # 这将输出提示提示，请因为install.sh会删除此目录下的所有文件，请阅读提示信息后再做决定
+    sudo bash install.sh -y
+
+ 请使用bash运行install.sh，而不是使用sh命令使用默认shell，否则可能会导致if[[]]无法被解释，导致没有输出提示信息、没有-y参数而直接运行。install.sh将会删除当前目录的所有文件（包括隐藏文件），请不要在用户默认目录下运行，这可能会导致您的用户配置被清除
+
 ## 使用及参数
 
 - PyCh [file]    逐行替换文件内pych文本为Python代码，并运行它
