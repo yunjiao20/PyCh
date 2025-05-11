@@ -20,7 +20,7 @@ then
     echo -n "有文件（包括隐藏文件，所以，请不要在用户默认目录下使用此程序），如"
     echo -n "您需要使用它实现PyCh快速更新，请使用sudo运行，并传入参数 -y"
     echo
-    echo "如    sudo bash install.sh"
+    echo "如    sudo bash install.sh -y"
     exit
 fi
 
