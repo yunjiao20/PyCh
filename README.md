@@ -1,6 +1,6 @@
 # PyCh
 
-出于一个突发的有趣的想法而编写的小程序，可以用作一个简陋的编译器，其代码如下：
+出于一个突发的有趣的想法而编写的小程序，可以用作一个简陋的编译器，PyCh代码类似：
 
     #!/bin/PyCh
 
@@ -26,6 +26,7 @@ PyCh使用Python逐行读取你提供的文件内容，并将翻译后的信息�
 如果您希望快速的将PyCh更新成新一版（或自定义版本），并放入 /bin 目录作为默认命令的话，可以使用 install.sh
 
     git clone https://github.com/yunjiao20/PyCh
+    cd PyCh
     bash install.sh    # 这将输出提示提示，请因为install.sh会删除此目录下的所有文件，请阅读提示信息后再做决定
     sudo bash install.sh -y
 
