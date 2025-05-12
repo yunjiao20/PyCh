@@ -66,7 +66,8 @@ PyCh实际上只是一个文本替换程序，将一些中文字符替换成Pyth
 ## 自定义与错误处理
 
 PyCh实现了读取文件和逐行置换输出功能，你可以通过更改置换字典来借用PyCh的替换功能    
-PyCh使用Bash[python3]来调用默认Python3运行代码，只允许您在拥有python3的Bash或类似环境下运行    
+PyCh使用Bash[python3]来调用默认Python3运行代码，只允许您在拥有python3的Bash或类似环境下运行，且代码应遵循Python语法    
+作为一个小程序，PyCh没有错误处理。如Python报错，请使用--output参数输出Python代码并检查问题     
 因为使用了Bash[echo "{line}" >> {output}]来向文件写入信息，代码中存在"$"可能会导致Bash出错    
 不知道还要讲些什么了，就先到这里吧(我为什么会给怎么简单的Python程序写怎么长的文档)    
 
