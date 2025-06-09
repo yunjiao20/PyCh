@@ -120,7 +120,7 @@ def main(sign: str):
     '''实现主要功能, 接受一个从函数 部分参数处理() 返回的字符串, 实现参数功能'''
 
     if sign == 'exit':    # 部分参数处理() 返回'exit', 结束程序
-        exit()
+        return
 
     # 读取文件信息
     program_path = sys.argv[len(sys.argv) - 1]    # 获取sys.argv的最后一位参数作为待处理文件地址
@@ -144,7 +144,7 @@ def main(sign: str):
     if output_file == '.pych':
         # 删除默认保存文件 .pych 并终止程序
         os.system('rm .pych')
-        exit()
+        return
     print(f'\nthe output file is {output_file}')
 
 if __name__ == '__main__':
